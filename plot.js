@@ -86,7 +86,9 @@ function createHistogramData(allRows, columnName) {
     var data = []
     for (var i = 0; i < allRows.length; i++) {
         row = allRows[i];
-        data.push(row[columnName])
+        var dataItem = row[columnName]
+        if (columnName == "Date") dataItem = new Date(dataItem)
+        data.push(dataItem)
     }
 
     return [{
