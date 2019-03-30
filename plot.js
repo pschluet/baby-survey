@@ -36,6 +36,34 @@ function buildPlots(allRows) {
         }, 
         {responsive: true}
     );
+
+    Plotly.newPlot(
+        'birthDate', 
+        createHistogramData(allRows, 'Date'),
+        { 
+            title: 'Birth Date',
+            xaxis: {
+                title: {
+                    text: 'Date'
+                }
+            } 
+        }, 
+        {responsive: true}
+    );
+
+    Plotly.newPlot(
+        'sleep', 
+        createHistogramData(allRows, 'Sleep'),
+        { 
+            title: 'How Much Sleep Will Paul Get?',
+            xaxis: {
+                title: {
+                    text: 'Sleep (minutes)'
+                }
+            } 
+        }, 
+        {responsive: true}
+    );
 }
 
 function createBarChartData(allRows) {
