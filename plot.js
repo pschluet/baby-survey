@@ -11,7 +11,7 @@ function buildPlots(allRows) {
 
     Plotly.newPlot(
         'length', 
-        createHistogramData(allRows, 'Length'),
+        createHistogramData(allRows, 'Length', {size: '0.5'}),
         { 
             title: 'Length',
             xaxis: {
@@ -25,7 +25,7 @@ function buildPlots(allRows) {
 
     Plotly.newPlot(
         'weight', 
-        createHistogramData(allRows, 'Pounds'),
+        createHistogramData(allRows, 'Pounds', {size: '0.5'}),
         { 
             title: 'Weight',
             xaxis: {
@@ -39,7 +39,7 @@ function buildPlots(allRows) {
 
     Plotly.newPlot(
         'birthDate', 
-        createHistogramData(allRows, 'Date'),
+        createHistogramData(allRows, 'Date', {}),
         { 
             title: 'Birth Date',
             xaxis: {
@@ -53,7 +53,7 @@ function buildPlots(allRows) {
 
     Plotly.newPlot(
         'sleep', 
-        createHistogramData(allRows, 'Sleep'),
+        createHistogramData(allRows, 'Sleep', {start: '-0.5', size: '1'}),
         { 
             title: 'How Much Sleep Will Paul Get?',
             xaxis: {
@@ -82,18 +82,22 @@ function createBarChartData(allRows) {
     }]
 }
 
-function createHistogramData(allRows, columnName) {
+function createHistogramData(allRows, columnName, xbins) {
     var data = []
     for (var i = 0; i < allRows.length; i++) {
         row = allRows[i];
         var dataItem = row[columnName]
-        if (columnName == "Date") dataItem = new Date(dataItem)
         data.push(dataItem)
+    }
+
+    if (columnName == "Date") {
+        data.sort((a,b) => new Date(a).getTime() - new Date(b).getTime() )
     }
 
     return [{
         x: data,
-        type: 'histogram'
+        type: 'histogram',
+        xbins: xbins
     }]
 }
 
