@@ -3,11 +3,11 @@ function main() {
 };
 
 function buildPlots(allRows) {
-
-    console.log(allRows);
+    
+    var fontSize = 20;
     
     Plotly.newPlot('boyGirl', createBarChartData(allRows),
-        { title: 'Boy or Girl?' }, {responsive: true});
+        { title: 'Boy or Girl?', font: {size: fontSize} }, {responsive: true});
 
     Plotly.newPlot(
         'length', 
@@ -18,7 +18,8 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Length (in)'
                 }
-            } 
+            },
+            font: {size: fontSize} 
         },
         {responsive: true}
     );
@@ -32,7 +33,8 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Weight (lbs)'
                 }
-            } 
+            },
+            font: {size: fontSize} 
         }, 
         {responsive: true}
     );
@@ -46,7 +48,8 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Date'
                 }
-            } 
+            }, 
+            font: {size: fontSize} 
         }, 
         {responsive: true}
     );
@@ -60,7 +63,8 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Sleep (minutes)'
                 }
-            } 
+            }, 
+            font: {size: fontSize}  
         }, 
         {responsive: true}
     );
@@ -92,6 +96,7 @@ function createHistogramData(allRows, columnName, xbins) {
 
     if (columnName == "Date") {
         data.sort((a,b) => new Date(a).getTime() - new Date(b).getTime() )
+        data = data.map((a) => a.replace('/19',''))
     }
 
     return [{
