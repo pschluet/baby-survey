@@ -1,41 +1,47 @@
+var primaryColor = '3A77AF';
+var highlightColor = 'EEC584';
+
 function main() {
     Plotly.d3.csv("https://raw.githubusercontent.com/pschluet/baby-survey/master/data.csv", function (data) { buildPlots(data) });
 };
 
 function buildPlots(allRows) {
-    
-    var fontSize = 20;
-
     Plotly.newPlot(
         'nameVsWeight', 
-        createBarChartData(allRows, 'Name', 'Pounds'),
+        createBarChartData(allRows, 'Name', 'Pounds', false, 9),
         { 
             title: 'Weight', 
             xaxis: {
                 title: {
                     text: 'Weight (lbs)'
                 }
-            }
+            },
+            height: 650
         },
         {responsive: true}
     );
 
     Plotly.newPlot(
         'nameVsLength', 
-        createBarChartData(allRows, 'Name', 'Length'),
+        createBarChartData(allRows, 'Name', 'Length', false, 20.5),
         { 
             title: 'Length',
             xaxis: {
                 title: {
                     text: 'Length (in)'
                 }
-            }
+            },
+            height: 650
         }, 
         {responsive: true}
     );
     
     Plotly.newPlot('boyGirl', createBoyGirlBarChartData(allRows),
-        { title: 'Boy or Girl?', font: {size: fontSize} }, {responsive: true});
+        {
+            title: 'Boy or Girl?'
+        }, 
+        {responsive: true}
+    );
 
     Plotly.newPlot(
         'length', 
@@ -46,8 +52,7 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Length (in)'
                 }
-            },
-            font: {size: fontSize} 
+            }
         },
         {responsive: true}
     );
@@ -61,8 +66,7 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Weight (lbs)'
                 }
-            },
-            font: {size: fontSize} 
+            }
         }, 
         {responsive: true}
     );
@@ -76,8 +80,7 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Date'
                 }
-            }, 
-            font: {size: fontSize} 
+            }
         }, 
         {responsive: true}
     );
@@ -91,20 +94,23 @@ function buildPlots(allRows) {
                 title: {
                     text: 'Sleep (minutes)'
                 }
-            }, 
-            font: {size: fontSize}  
+            } 
         }, 
         {responsive: true}
     );
 }
 
-function createBarChartData(allRows, labelCol, valueCol, sortByLabel) {
+function createBarChartData(allRows, labelCol, valueCol, sortByLabel = false, valueToHighlight = -1) {
     var data = new Array();
+    var colors = new Array();
 
     for (var i = 0; i < allRows.length; i++) {
         row = allRows[i];
-        var label = row[labelCol].includes('?') ? '?' + i.toString() : row[labelCol];
-        data.push([label, row[valueCol]]);
+        var label = row[labelCol].includes('?') ? 'Unknown ' + i.toString() : row[labelCol];
+        var value = row[valueCol]
+        var color = value == valueToHighlight ? highlightColor : primaryColor
+
+        data.push([label, value, color]);
     }
 
     // Sort
@@ -117,7 +123,10 @@ function createBarChartData(allRows, labelCol, valueCol, sortByLabel) {
         y: data.map(item => item[0]),
         x: data.map(item => item[1]),
         type: 'bar',
-        orientation: 'h'
+        orientation: 'h',
+        marker: {
+            color: data.map(item => item[2])
+        }
     }]
 
 }
