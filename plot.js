@@ -5,8 +5,36 @@ function main() {
 function buildPlots(allRows) {
     
     var fontSize = 20;
+
+    Plotly.newPlot(
+        'nameVsWeight', 
+        createBarChartData(allRows, 'Name', 'Pounds'),
+        { 
+            title: 'Weight', 
+            xaxis: {
+                title: {
+                    text: 'Weight (lbs)'
+                }
+            }
+        },
+        {responsive: true}
+    );
+
+    Plotly.newPlot(
+        'nameVsLength', 
+        createBarChartData(allRows, 'Name', 'Length'),
+        { 
+            title: 'Length',
+            xaxis: {
+                title: {
+                    text: 'Length (in)'
+                }
+            }
+        }, 
+        {responsive: true}
+    );
     
-    Plotly.newPlot('boyGirl', createBarChartData(allRows),
+    Plotly.newPlot('boyGirl', createBoyGirlBarChartData(allRows),
         { title: 'Boy or Girl?', font: {size: fontSize} }, {responsive: true});
 
     Plotly.newPlot(
@@ -70,7 +98,31 @@ function buildPlots(allRows) {
     );
 }
 
-function createBarChartData(allRows) {
+function createBarChartData(allRows, labelCol, valueCol, sortByLabel) {
+    var data = new Array();
+
+    for (var i = 0; i < allRows.length; i++) {
+        row = allRows[i];
+        var label = row[labelCol].includes('?') ? '?' + i.toString() : row[labelCol];
+        data.push([label, row[valueCol]]);
+    }
+
+    // Sort
+    data.sort((a,b) => {
+        var sortCol = sortByLabel ? 0 : 1;
+        return b[sortCol] - a[sortCol];
+    });
+
+    return [{
+        y: data.map(item => item[0]),
+        x: data.map(item => item[1]),
+        type: 'bar',
+        orientation: 'h'
+    }]
+
+}
+
+function createBoyGirlBarChartData(allRows) {
     var boyCount = 0, girlCount = 0;
 
     for (var i = 0; i < allRows.length; i++) {
